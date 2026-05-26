@@ -1,8 +1,19 @@
-const express = require("express");
+// const express = require("express");
+// const app = express();
+
+// app.get("/", (req, res) => {
+//   res.send("Server running");
+// });
+
+// module.exports = app;
+
+
+import express from "express";
+
 const app = express();
 
 app.get("/", (req, res) => {
   res.send("Server running");
 });
 
-module.exports = app;
+export default app;
