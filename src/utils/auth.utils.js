@@ -5,9 +5,9 @@ import config from '../config/config.js';
 export function validateDataReg(body) {
     if (!body) return false;
     const { username, email, password } = body;
-    if (typeof username !== 'string' || username.trim().length === 0) return false;
-    if (typeof email !== 'string' || !email.includes('@') || email.trim().length === 0) return false;
-    if (typeof password !== 'string' || password.length < 6) return false;
+    if (typeof username !== 'string' || username.trim().length === 0) return {err: "username is wrong"};
+    if (typeof email !== 'string' || !email.includes('@') || email.trim().length === 0) return {err: "You entered wrong Email"};
+    if (typeof password !== 'string' || password.length < 6) return {err: "password should be Less than 6 chars"};
     return true;
 }
 

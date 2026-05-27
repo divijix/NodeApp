@@ -11,8 +11,8 @@ export async function registerUser(req, res) {
         // Validations go here ----> 
 
         const validData = authUtils.validateDataReg(req.body);
-        if (!validData) {
-            return res.status(400).json({ message: "wrong input values" })
+        if (validData.err) {
+            return res.status(400).json({ message: validData.err })
         }
 
 
