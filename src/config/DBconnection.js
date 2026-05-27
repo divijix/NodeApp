@@ -60,6 +60,10 @@ import pkg from 'pg';
 // import config from './config';
 const {Pool} = pkg;
 
+if (!config.DB_URL) {
+    console.error("CRITICAL CONFIG ERROR: Database connection string (DB_URL / DATABASE_URL / POSTGRES_URL) is not defined in the environment variables!");
+}
+
 const pool = new Pool({
     connectionString: config.DB_URL,
     ssl:{
@@ -70,5 +74,29 @@ const pool = new Pool({
 
 pool.on("connect", ()=>{console.log("Connection established to the PostDB")});
 
+// Test the connection immediately on startup and initialize tables
+pool.connect()
+    .then(async (client) => {
+        console.log("Database connection successful!");
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS users (
+                    id SERIAL PRIMARY KEY,
+                    username VARCHAR(255) NOT NULL,
+                    email VARCHAR(255) UNIQUE NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    profile TEXT
+                );
+            `);
+            console.log("Database tables verified/created successfully.");
+        } catch (tableErr) {
+            console.error("Failed to verify/create database tables:", tableErr.message);
+        } finally {
+            client.release();
+        }
+    })
+    .catch(err => {
+        console.error("Database connection failed:", err.message);
+    });
 
 export default pool;

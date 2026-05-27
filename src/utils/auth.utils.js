@@ -1,65 +1,33 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config/config.js';
 
-// --- Validating input ---
-
-function validateUsername(username){
-    if(!username || username.trim().length < 3 || username.trim().length > 255){
-        return false;
-    }
+export function validateDataReg(body) {
+    if (!body) return false;
+    const { username, email, password } = body;
+    if (typeof username !== 'string' || username.trim().length === 0) return false;
+    if (typeof email !== 'string' || !email.includes('@') || email.trim().length === 0) return false;
+    if (typeof password !== 'string' || password.length < 6) return false;
     return true;
 }
 
-function validateEmail(email){
-    if(!email){
-        return false;
-    }
-    
-    let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!regex.test(email.trim())) {
-        return false;
-    }return true;
+export function validateDataLogin(body) {
+    if (!body) return false;
+    const { email, password } = body;
+    if (typeof email !== 'string' || email.trim().length === 0) return false;
+    if (typeof password !== 'string' || password.length === 0) return false;
+    return true;
 }
 
-function validatePassword(password){
-    if(!password || password.trim().length < 6 || password.trim().length > 255){
-        return false;
-    }return true;
+export async function hashPassword(password) {
+    const saltRounds = 10;
+    return await bcrypt.hash(password, saltRounds);
 }
 
-export function validateDataReg(data){
-    if(validateUsername(data.username) && validateEmail(data.email) && validatePassword(data.password)){
-        return true;
-    }
-    return false;
-}
-
-export function validateDataLogin(data){
-    if(validateEmail(data.email) && validatePassword(data.password)){
-        return true;
-    }
-    return false;
-}
-
-
-// --- Hashing the password ---
-
-const saltRounds = 10;
-
-export async function hashPassword(password){
-    const hash = await bcrypt.hash(password,saltRounds);
-    return hash;
-}
-
-export async function comparePass(password, hashedPassword){
+export async function comparePass(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
 }
 
-
-// --- JWT ---
-
-export function generateToken(data){
-    return jwt.sign(data, config.JWT_KEY, {expiresIn:'7d'});
+export function generateToken(tokenData) {
+    return jwt.sign(tokenData, config.JWT_KEY || 'defaultsecret', { expiresIn: '24h' });
 }
-

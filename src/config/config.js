@@ -1,28 +1,17 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-const requiredConfig = {
-    DB_URL: process.env.DB_URL,
-    JWT_KEY: process.env.JWT_KEY,
-    CL_CLOUD_NAME: process.env.CL_CLOUD_NAME,
-    CL_KEY: process.env.CL_KEY,
-    CL_SECRET: process.env.CL_SECRET,
-}
-
-
-// checking if all the Required Configs are present
-
-for(const[key, value] of Object.entries(requiredConfig)){
-    if(!value || value.trim() === ''){
-        throw new Error(`CRITICAL CONFIG ERROR: ENV variable missing ${key} is missing `);
-    }
-}
-
 const config = {
-    ...requiredConfig,
-    // non important configs 
+    DB_URL: process.env.DB_URL || process.env.DATABASE_URL || process.env.POSTGRES_URL,
+    JWT_KEY: process.env.JWT_KEY,
     NODE_ENV: process.env.NODE_ENV || 'DEV'
+};
+
+if (!config.DB_URL) {
+    console.warn("WARNING: DB_URL (or DATABASE_URL/POSTGRES_URL) is not defined in environment variables!");
+}
+if (!config.JWT_KEY) {
+    console.warn("WARNING: JWT_KEY is not defined in environment variables!");
 }
 
 export default config;
