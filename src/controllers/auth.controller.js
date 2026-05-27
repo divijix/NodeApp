@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import bcrypt from "bcrypt"
 // import USER from "../models/user.model.js"
 import pool from "../config/DBconnection.js"
 import * as authUtils from "../utils/auth.utils.js"
