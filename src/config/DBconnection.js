@@ -60,6 +60,10 @@ import pkg from 'pg';
 // import config from './config';
 const {Pool} = pkg;
 
+if (!config.DB_URL) {
+    console.error("CRITICAL CONFIG ERROR: Database connection string (DB_URL / DATABASE_URL / POSTGRES_URL) is not defined in the environment variables!");
+}
+
 const pool = new Pool({
     connectionString: config.DB_URL,
     ssl:{
