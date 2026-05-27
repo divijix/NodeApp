@@ -4,9 +4,11 @@ import cors from 'cors';
 import authRouter from './routes/auth.js';
 // import { connectToDB } from './config/DBconnection.js';
 import pool from './config/DBconnection.js';
-import User from './routes/user.js';
+import user from './routes/user.js';
 import category from './routes/category.js';
 import products from './routes/products.js';
+// import { upload } from './utils/uploads.js';
+
 
 const app = express();
 
@@ -14,11 +16,13 @@ const app = express();
 
 app.use(cors());
 app.use(express.json()); // TODO handle wrong format of json data, json error handling 
+app.use(express.urlencoded({extended : false}));
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/user", User);
+app.use("/api/v1/user", user);
 app.use("/api/v1/category", category);
-app.use("/api/v1/products", products)
+app.use("/api/v1/products", products);
+// app.use("/upload", upload);
 
 export default app;

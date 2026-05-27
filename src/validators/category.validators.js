@@ -9,12 +9,12 @@ function validName(name){
     return {name:name};
 }
 
-function validDis(discription){
-    if(!discription){
-        return {err:"discription must be present"};
+function validDis(description){
+    if(!description){
+        return {err:"description must be present"};
     }
-    const news = discription.trim();
-    return {discription:news}
+    const news = description.trim();
+    return {description:news}
 
 }
 
@@ -32,7 +32,7 @@ function validUrl(url){
 
 export function validData(body){
     const name = body?.name;
-    const discription = body?.discription;
+    const description = body?.description;
     const url = body?.url;
 
     const newName = validName(name);
@@ -40,15 +40,15 @@ export function validData(body){
         return {err:newName.err};
     }
 
-    const newDiscription = validDis(discription); 
-    if(newDiscription.err){
-        return {err:newDiscription.err};
+    const newDescription = validDis(description); 
+    if(newDescription.err){
+        return {err:newDescription.err};
     }
     
-    const newUrl = validUrl(url);
-    if(newUrl.err){
-        return {err:newUrl.err}
-    }
+    // const newUrl = validUrl(url);
+    // if(newUrl.err){
+    //     return {err:newUrl.err}
+    // }
 
-    return {name:newName.name, discription: newDiscription.discription,url: newUrl.url};
+    return {name:newName.name, description: newDescription.description};
 }

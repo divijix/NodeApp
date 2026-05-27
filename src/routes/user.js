@@ -3,10 +3,11 @@ import { verifyUser } from '../middleware/verifyJwt.js';
 import * as userController from '../controllers/user.controller.js'
 
 
-const User = Router();
+const user = Router();
 
 
-User.post('/update-profile',verifyUser,userController.updateProflie);
+user.post('/update-profile',verifyUser,userController.updateProflie);
+user.get('/')
 
 
-export default User;
+export default user;

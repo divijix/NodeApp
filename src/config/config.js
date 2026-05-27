@@ -4,7 +4,10 @@ dotenv.config();
 
 const requiredConfig = {
     DB_URL: process.env.DB_URL,
-    JWT_KEY: process.env.JWT_KEY
+    JWT_KEY: process.env.JWT_KEY,
+    CL_CLOUD_NAME: process.env.CL_CLOUD_NAME,
+    CL_KEY: process.env.CL_KEY,
+    CL_SECRET: process.env.CL_SECRET,
 }
 
 
