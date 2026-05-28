@@ -68,8 +68,8 @@ export async function loginUser(req, res) {
         // validate the data
 
         const validData = authUtils.validateDataLogin(req.body);
-        if (!validData) {
-            return res.status(400).json({ message: "Invalid Input Data" });
+        if (validData.err) {
+            return res.status(400).json({ message: validData.err });
         }
 
 
