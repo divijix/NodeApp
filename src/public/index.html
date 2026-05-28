@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #07070b;
+  --border: rgba(255,255,255,0.07);
+  --text: #eceae3;
+  --muted: rgba(236,234,227,0.42);
+  --accent: #6c63f5;
+  --accent2: #38c9a8;
+  --dim: rgba(236,234,227,0.12);
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── animated grid background ── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── page layout ── */
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+/* ── badge ── */
+.badge {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  border: 1px solid rgba(56,201,168,0.25);
+  padding: 6px 18px;
+  border-radius: 100px;
+  margin-bottom: 2.6rem;
+  opacity: 0;
+  animation: up 0.7s ease forwards 0.1s;
+  overflow: hidden;
+  position: relative;
+}
+.badge::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(56,201,168,0.18), transparent);
+  animation: sweep 3.5s ease infinite 1.2s;
+}
+
+/* ── headline ── */
+.headline {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-align: center;
+  max-width: 820px;
+  opacity: 0;
+  animation: up 0.8s ease forwards 0.25s;
+}
+.headline .w1 { color: var(--text); display: block; }
+.headline .w2 {
+  display: block;
+  color: var(--accent);
+}
+
+/* ── sub ── */
+.sub {
+  margin-top: 1.8rem;
+  font-size: clamp(0.88rem, 1.6vw, 1rem);
+  font-weight: 300;
+  color: var(--muted);
+  text-align: center;
+  max-width: 440px;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: up 0.8s ease forwards 0.42s;
+}
+
+/* ── CTA ── */
+.cta-wrap {
+  margin-top: 3rem;
+  opacity: 0;
+  animation: up 0.8s ease forwards 0.58s;
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  padding: 15px 34px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
+}
+.cta:hover {
+  transform: translateY(-3px);
+  background: #7b73f8;
+  box-shadow: 0 12px 40px rgba(108,99,245,0.35);
+}
+.cta:active { transform: translateY(-1px); }
+.arrow {
+  display: inline-block;
+  transition: transform 0.22s ease;
+}
+.cta:hover .arrow { transform: translateX(5px); }
+
+/* ── code hint ── */
+.code-hint {
+  margin-top: 1.6rem;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(236,234,227,0.2);
+  text-align: center;
+  opacity: 0;
+  animation: up 0.8s ease forwards 0.72s;
+}
+.code-hint .kw { color: rgba(56,201,168,0.5); }
+
+/* ── stats ── */
+.stats {
+  margin-top: 4.5rem;
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.018);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  animation: up 0.8s ease forwards 0.88s;
+}
+.stat {
+  padding: 1.3rem 2.5rem;
+  text-align: center;
+  position: relative;
+}
+.stat + .stat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 18%; height: 64%;
+  width: 1px;
+  background: var(--border);
+}
+.stat-num {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.stat-label {
+  margin-top: 3px;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── corner marks ── */
+.mk {
+  position: fixed;
+  width: 22px; height: 22px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.3;
+}
+.mk-tl { top: 24px; left: 24px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); }
+.mk-tr { top: 24px; right: 24px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+.mk-bl { bottom: 24px; left: 24px; border-bottom: 1px solid var(--accent2); border-left: 1px solid var(--accent2); }
+.mk-br { bottom: 24px; right: 24px; border-bottom: 1px solid var(--accent2); border-right: 1px solid var(--accent2); }
+
+/* ── animations ── */
+@keyframes up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes sweep {
+  0%   { left: -60%; }
+  100% { left: 160%; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="mk mk-tl"></div>
+<div class="mk mk-tr"></div>
+<div class="mk mk-bl"></div>
+<div class="mk mk-br"></div>
+
+<main class="page">
+  <div class="badge">API Reference &nbsp;·&nbsp; v1.0</div>
+
+  <h1 class="headline">
+    <span class="w1">Build something</span>
+    <span class="w2">remarkable.</span>
+  </h1>
+
+  <p class="sub">
+    Everything you need to integrate, extend, and ship faster.
+    Clean endpoints. Real examples. Zero fluff.
+  </p>
+
+  <div class="cta-wrap">
+    <a href="https://app.apidog.com/project/1300930" class="cta">
+      Read the Docs <span class="arrow">→</span>
+    </a>
+  </div>
+
+
+</main>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, t = 0;
+
+const COLS = 28, ROWS = 18;
+let cells = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  buildCells();
+}
+
+function buildCells() {
+  cells = [];
+  const cw = W / COLS, ch = H / ROWS;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      cells.push({
+        x: c * cw,
+        y: r * ch,
+        w: cw,
+        h: ch,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.3 + Math.random() * 0.5,
+        amp: 0.4 + Math.random() * 0.6,
+        col: Math.random() > 0.5 ? 0 : 1  // 0=purple, 1=teal
+      });
+    }
+  }
+}
+
+resize();
+window.addEventListener('resize', resize);
+
+let mx = W / 2, my = H / 2;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  const now = t * 0.012;
+
+  for (const cell of cells) {
+    const cx = cell.x + cell.w / 2;
+    const cy = cell.y + cell.h / 2;
+    const distMouse = Math.hypot(mx - cx, my - cy);
+    const mouseInfluence = Math.max(0, 1 - distMouse / 300);
+
+    const wave = Math.sin(now * cell.speed + cell.phase);
+    const base = (wave + 1) / 2;
+    const brightness = base * cell.amp + mouseInfluence * 0.4;
+    const alpha = Math.max(0, Math.min(brightness * 0.065, 0.09));
+
+    if (alpha < 0.004) continue;
+
+    const r = cell.col === 0
+      ? `rgba(108,99,245,${alpha})`
+      : `rgba(56,201,168,${alpha})`;
+
+    ctx.fillStyle = r;
+    ctx.fillRect(cell.x + 0.5, cell.y + 0.5, cell.w - 1, cell.h - 1);
+  }
+
+  // grid lines
+  const cw = W / COLS, ch = H / ROWS;
+  ctx.strokeStyle = 'rgba(255,255,255,0.028)';
+  ctx.lineWidth = 0.5;
+  for (let c = 0; c <= COLS; c++) {
+    ctx.beginPath();
+    ctx.moveTo(c * cw, 0);
+    ctx.lineTo(c * cw, H);
+    ctx.stroke();
+  }
+  for (let r = 0; r <= ROWS; r++) {
+    ctx.beginPath();
+    ctx.moveTo(0, r * ch);
+    ctx.lineTo(W, r * ch);
+    ctx.stroke();
+  }
+
+  // glowing nodes at intersections near mouse
+  for (let c = 0; c <= COLS; c++) {
+    for (let r = 0; r <= ROWS; r++) {
+      const nx = c * cw, ny = r * ch;
+      const d = Math.hypot(mx - nx, my - ny);
+      if (d < 180) {
+        const a = (1 - d / 180) * 0.55;
+        ctx.beginPath();
+        ctx.arc(nx, ny, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(108,99,245,${a})`;
+        ctx.fill();
+      }
+    }
+  }
+
+  t++;
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

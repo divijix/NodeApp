@@ -14,8 +14,8 @@ export function validateDataReg(body) {
 export function validateDataLogin(body) {
     if (!body) return false;
     const { email, password } = body;
-    if (typeof email !== 'string' || email.trim().length === 0) return false;
-    if (typeof password !== 'string' || password.length === 0) return false;
+    if (typeof email !== 'string' || email.trim().length === 0) return {err: "Email should be correct" };
+    if (typeof password !== 'string' || password.length === 0) return {err: "Password Should be greater than 0"};
     return true;
 }
 
