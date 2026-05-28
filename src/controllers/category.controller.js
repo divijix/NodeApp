@@ -1,5 +1,5 @@
 import pool from "../config/DBconnection.js";
-import * as validators from "../validators/category.validators.js"
+import * as validators from "../validators/general.validators.js"
 import * as uploadUtil from "../utils/uplaodfile.js";
 
 
