@@ -1,6 +1,7 @@
 import Router from 'express';
 import * as categoryController from '../controllers/category.controller.js'
 import multer from 'multer';
+import { verifyAdmin } from '../middleware/verifyJwt.js';
 
 
 const storage = multer.diskStorage({
@@ -19,7 +20,7 @@ const upload = multer({storage: storage});
 const category = Router();
 
 category.get("/",categoryController.getCategory);
-category.post("/new-category",upload.single('image'),categoryController.newCategory);
+category.post("/new-category",verifyAdmin ,upload.single('image'),categoryController.newCategory);
 // category.delete("/delete-category",);
 category.patch("/update-category",categoryController.updateCategory);
 
