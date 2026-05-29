@@ -14,6 +14,7 @@ import pool from './config/DBconnection.js';
 import user from './routes/user.js';
 import category from './routes/category.js'
 import inquiry from './routes/inquiry.js';
+import { errorMiddleware } from './errors/error.middleware.js';
 
 // Recreate __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(express.json()); // TODO handle wrong format of json data, json error handling 
 app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(errorMiddleware);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", user);
