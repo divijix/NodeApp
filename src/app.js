@@ -11,7 +11,7 @@ import morgan from 'morgan';
 import authRouter from './routes/auth.js';
 // import { connectToDB } from './config/DBconnection.js';
 import pool from './config/DBconnection.js';
-import User from './routes/user.js';
+import user from './routes/user.js';
 import category from './routes/category.js'
 import inquiry from './routes/inquiry.js';
 
@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/user", User);
+app.use("/api/v1/user", user);
 app.use("/api/v1/category", category);
 app.use("/api/v1/inquiry",inquiry);
 

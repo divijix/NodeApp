@@ -2,8 +2,10 @@ import { Router } from 'express';
 import pool from '../config/DBconnection.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/config.js';
+import { verifyUser } from '../middleware/verifyJwt.js';
+import * as userController from '../controllers/user.controller.js'
 
-const router = Router();
+const user = Router();
 
 async function authenticate(req, res, next) {
     try {
@@ -19,7 +21,7 @@ async function authenticate(req, res, next) {
     }
 }
 
-router.get('/profile', authenticate, async (req, res) => {
+user.get('/profile', authenticate, async (req, res) => {
     try {
         const query = 'SELECT id, username, email, profile FROM users WHERE id = $1;';
         const result = await pool.query(query, [req.user.userId]);
@@ -33,7 +35,7 @@ router.get('/profile', authenticate, async (req, res) => {
     }
 });
 
-router.put('/profile', authenticate, async (req, res) => {
+user.put('/profile', authenticate, async (req, res) => {
     try {
         const { username, profile } = req.body;
         const query = 'UPDATE users SET username = COALESCE($1, username), profile = COALESCE($2, profile) WHERE id = $3 RETURNING id, username, email, profile;';
@@ -48,4 +50,6 @@ router.put('/profile', authenticate, async (req, res) => {
     }
 });
 
-export default router;
+user.post('/profile',verifyUser,userController.updateProflie);
+
+export default user;
